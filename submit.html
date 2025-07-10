@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submit Gossip | Gossip Girl</title>
+  <style>
+    body {
+      background: #111 url('https://i.imgur.com/svWWfcy.jpeg') center/cover no-repeat;
+      color: white;
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #form-container {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2rem 3rem;
+      border-radius: 10px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      resize: vertical;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background-color: #fff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #f4d3d3;
+    }
+
+    #logout {
+      margin-top: 1rem;
+      background: transparent;
+      color: #ccc;
+      border: 1px solid #ccc;
+    }
+
+    #logout:hover {
+      background: #fff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="form-container">
+    <h2>Got the tea? Spill it 👀</h2>
+    <textarea id="gossipText" rows="5" placeholder="Type your anonymous tip..."></textarea>
+    <button id="sendTip">Send Tip</button>
+    <button id="logout">Log Out</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDh0FRUDHrWGjP0PsoyNTyo9Do-wNqKqHU",
+      authDomain: "gossipgirl-project.firebaseapp.com",
+      projectId: "gossipgirl-project",
+      storageBucket: "gossipgirl-project.firebasestorage.app",
+      messagingSenderId: "8712402840",
+      appId: "1:8712402840:web:51f1e8f44689938c1edded"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    document.getElementById("sendTip").addEventListener("click", async () => {
+      const text = document.getElementById("gossipText").value.trim();
+      if (!text) return alert("Spill something juicy first 💅");
+
+      try {
+        await addDoc(collection(db, "blasts"), {
+          text,
+          timestamp: serverTimestamp()
+        });
+        alert("Tip sent 💣 You're such a little snitch.");
+        document.getElementById("gossipText").value = "";
+      } catch (err) {
+        alert("Error sending gossip 😢");
+      }
+    });
+
+    document.getElementById("logout").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    });
+  </script>
+</body>
+</html>
