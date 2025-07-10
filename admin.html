@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gossip Girl Admin</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  body { background: #111; color: #eee; }
+  .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+  h1 { text-align: center; }
+  .tip-item { background: #222; padding: 15px; margin-bottom: 15px; border-left: 5px solid #f5c518; }
+  .tip-email { font-size: 0.9rem; color: #aaa; margin-bottom: 5px; }
+  .approve-btn { background: #f5c518; border: none; padding: 8px 12px; cursor: pointer; font-weight: 700; }
+  #login-section { max-width: 300px; margin: 100px auto; }
+  #password { width: 100%; padding: 8px; font-size: 1rem; }
+  #login-btn { margin-top: 12px; width: 100%; padding: 8px; background: #f5c518; border: none; font-weight: 700; cursor: pointer; }
+  #login-error { color: red; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container" id="login-section">
+  <h1>Admin Login</h1>
+  <input id="password" type="password" placeholder="Enter Admin Password" />
+  <button id="login-btn">Log In</button>
+  <p id="login-error"></p>
+</div>
+
+<div class="container" id="admin-panel" style="display:none;">
+  <h1>Gossip Girl Admin</h1>
+  <div id="pending-tips"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    onSnapshot,
+    updateDoc,
+    doc
+  } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDh0FRUDHrWGjP0PsoyNTyo9Do-wNqKqHU",
+    authDomain: "gossipgirl-project.firebaseapp.com",
+    projectId: "gossipgirl-project",
+    storageBucket: "gossipgirl-project.firebasestorage.app",
+    messagingSenderId: "8712402840",
+    appId: "1:8712402840:web:51f1e8f44689938c1edded"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const adminPassword = "xoxoGossip"; // <-- CHANGE THIS TO YOUR SECRET PASSWORD
+
+  const loginSection = document.getElementById('login-section');
+  const adminPanel = document.getElementById('admin-panel');
+  const loginBtn = document.getElementById('login-btn');
+  const passwordInput = document.getElementById('password');
+  const loginError = document.getElementById('login-error');
+  const pendingTipsDiv = document.getElementById('pending-tips');
+
+  loginBtn.onclick = () => {
+    if (passwordInput.value === adminPassword) {
+      loginSection.style.display = 'none';
+      adminPanel.style.display = 'block';
+      loadPendingTips();
+    } else {
