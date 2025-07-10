@@ -21,6 +21,8 @@
       border-radius: 10px;
       text-align: center;
       backdrop-filter: blur(5px);
+      max-width: 400px;
+      width: 100%;
     }
 
     h2 {
@@ -36,6 +38,7 @@
       font-size: 16px;
       resize: vertical;
       margin-bottom: 1rem;
+      font-family: 'Georgia', serif;
     }
 
     button {
@@ -47,6 +50,8 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-family: 'Georgia', serif;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -83,17 +88,22 @@
       apiKey: "AIzaSyDh0FRUDHrWGjP0PsoyNTyo9Do-wNqKqHU",
       authDomain: "gossipgirl-project.firebaseapp.com",
       projectId: "gossipgirl-project",
-      storageBucket: "gossipgirl-project.firebasestorage.app",
+      storageBucket: "gossipgirl-project.appspot.com",
       messagingSenderId: "8712402840",
       appId: "1:8712402840:web:51f1e8f44689938c1edded"
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let userEmail = "";
 
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
+      if (user && user.email !== "meow999w@gmail.com") {
+        userEmail = user.email;
+      } else {
+        // If no user or admin user tries to access submit page, redirect to login
         window.location.href = "index.html";
       }
     });
@@ -103,8 +113,9 @@
       if (!text) return alert("Spill something juicy first 💅");
 
       try {
-        await addDoc(collection(db, "blasts"), {
+        await addDoc(collection(db, "tips"), {
           text,
+          email: userEmail,
           timestamp: serverTimestamp()
         });
         alert("Tip sent 💣 You're such a little snitch.");
