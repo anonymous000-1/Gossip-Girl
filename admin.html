@@ -2,113 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gossip Girl Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gossip Girl - Admin</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Georgia', serif;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      letter-spacing: 2px;
-      font-size: 2em;
-    }
-
-    .tip {
-      background-color: #111;
-      border-left: 5px solid #f5c518;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-
-    .tip-email {
-      font-size: 0.85em;
-      color: #bbb;
-      margin-bottom: 5px;
-    }
-
-    .tip-text {
-      font-size: 1.1em;
-    }
-
-    .logout-btn {
-      background: #f5c518;
-      color: #000;
-      padding: 10px 20px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      display: block;
-      margin: 20px auto 0;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
-    <h1>👑 Gossip Girl Admin</h1>
-    <div id="tipList">Loading tips...</div>
-    <button class="logout-btn" id="logout">Logout</button>
+    <h1 class="title">Gossip Girl Admin</h1>
+
+    <div id="loginSection">
+      <input type="email" id="adminEmail" placeholder="Email" required />
+      <input type="password" id="adminPassword" placeholder="Password" required />
+      <button onclick="login()">Log In</button>
+      <p id="loginError" class="error hidden">Oops! Wrong email or password.</p>
+    </div>
+
+    <div id="adminPanel" class="hidden">
+      <h2>Submitted Tips 💣</h2>
+      <div id="tipList"></div>
+    </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDh0FRUDHrWGjP0PsoyNTyo9Do-wNqKqHU",
-      authDomain: "gossipgirl-project.firebaseapp.com",
-      projectId: "gossipgirl-project",
-      storageBucket: "gossipgirl-project.appspot.com",
-      messagingSenderId: "8712402840",
-      appId: "1:8712402840:web:51f1e8f44689938c1edded"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore(app);
-
-    const tipList = document.getElementById("tipList");
-    const logoutBtn = document.getElementById("logout");
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user && user.email === "meow999w@gmail.com") {
-        const q = query(collection(db, "tips"), orderBy("timestamp", "desc"));
-        const querySnapshot = await getDocs(q);
-
-        tipList.innerHTML = "";
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const tipDiv = document.createElement("div");
-          tipDiv.className = "tip";
-          tipDiv.innerHTML = `
-            <div class="tip-email">From: ${data.email || "Anonymous"}</div>
-            <div class="tip-text">${data.text}</div>
-          `;
-          tipList.appendChild(tipDiv);
-        });
-
-      } else {
-        window.location.href = "login.html";
-      }
-    });
-
-    logoutBtn.onclick = () => {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
