@@ -218,3 +218,130 @@ button:active {
   pointer-events: none;
   user-select: none;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gossip Girl Glam</title>
+<style>
+  /* Base styles */
+  body {
+    background: #1a001a;
+    color: #ff9ed6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 2rem;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Shimmering title */
+  @keyframes shimmer {
+    0% {
+      background-position: -500px 0;
+    }
+    100% {
+      background-position: 500px 0;
+    }
+  }
+
+  .title {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(90deg, #d81b60 30%, #ff80ab 50%, #d81b60 70%);
+    background-size: 1000px 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s infinite;
+    margin-bottom: 2rem;
+  }
+
+  /* Button glow + sparkle on hover */
+  button {
+    position: relative;
+    background: #ff80ab;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 0 8px #ff80ab;
+    transition: box-shadow 0.3s ease;
+  }
+  button:hover {
+    box-shadow: 0 0 20px #ff80ab;
+  }
+  button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, #fff0ff 10%, transparent 40%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px #f50057);
+    animation: sparkle-float 2.5s linear infinite;
+  }
+  button:hover::before {
+    opacity: 0.6;
+  }
+
+  /* Sparkle animation */
+  @keyframes sparkle-float {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-50px) translateX(20px) scale(1.2); opacity: 0; }
+  }
+  .sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #fff8ff 0%, #f50057 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #f50057;
+    animation: sparkle-float 3s linear forwards;
+    opacity: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 0 4px #f50057);
+  }
+</style>
+</head>
+<body>
+
+<h1 class="title">Welcome to Gossip Girl Glam</h1>
+
+<button id="tipButton">Submit Tip</button>
+
+<script>
+  // Sparkle generator
+  function createSparkle() {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => {
+      sparkle.remove();
+    }, 3000);
+  }
+
+  // Make sparkles appear every 400ms
+  setInterval(createSparkle, 400);
+
+  // Example button click effect
+  const btn = document.getElementById('tipButton');
+  btn.addEventListener('click', () => {
+    alert('Tip submitted! ✨');
+  });
+</script>
+
+</body>
+</html>
