@@ -1,81 +1,91 @@
-// This script handles:
-// - Sending tips (saved privately to Firebase Firestore)
-// - Showing only approved posts publicly
-// - Admin panel for approving tips with password protection
+// === Config ===
+const ADMIN_EMAIL = "youremail@example.com";   // <-- change to your admin email
+const ADMIN_PASSWORD = "yourpassword";         // <-- change to your password
 
-// Firebase config & init (replace with your own config)
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  where,
-  onSnapshot,
-  updateDoc,
-  doc,
-  getDocs,
-} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+// === Common Functions ===
+// Get tips array from localStorage (or empty array)
+function getTips() {
+  const tips = localStorage.getItem("gg_tips");
+  return tips ? JSON.parse(tips) : [];
+}
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDh0FRUDHrWGjP0PsoyNTyo9Do-wNqKqHU",
-  authDomain: "gossipgirl-project.firebaseapp.com",
-  projectId: "gossipgirl-project",
-  storageBucket: "gossipgirl-project.firebasestorage.app",
-  messagingSenderId: "8712402840",
-  appId: "1:8712402840:web:51f1e8f44689938c1edded"
-};
+// Save tips array back to localStorage
+function saveTips(tips) {
+  localStorage.setItem("gg_tips", JSON.stringify(tips));
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// === INDEX.HTML SCRIPT ===
+if (document.getElementById("tipForm")) {
+  const tipForm = document.getElementById("tipForm");
+  const tipInput = document.getElementById("tipInput");
+  const confirmation = document.getElementById("confirmation");
 
-const tipForm = document.getElementById('tip-form');
-const tipMessage = document.getElementById('tip-message');
-const postsContainer = document.getElementById('posts');
+  tipForm.addEventListener("submit", e => {
+    e.preventDefault();
 
-tipForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const tipText = document.getElementById('tip-text').value.trim();
-  const tipEmail = document.getElementById('tip-email').value.trim();
+    const tipText = tipInput.value.trim();
+    if (tipText.length === 0) return;
 
-  if (!tipText || !tipEmail) {
-    tipMessage.textContent = "Please fill in all fields.";
-    tipMessage.style.color = "red";
-    return;
-  }
+    let tips = getTips();
+    tips.push({ text: tipText, timestamp: Date.now() });
+    saveTips(tips);
 
-  try {
-    await addDoc(collection(db, 'tips'), {
-      text: tipText,
-      email: tipEmail,
-      approved: false,
-      timestamp: Date.now()
-    });
+    tipInput.value = "";
+    confirmation.classList.remove("hidden");
 
-    tipMessage.textContent = "Thanks for the tip! Gossip Girl will review it soon.";
-    tipMessage.style.color = "lightgreen";
-    tipForm.reset();
-  } catch (error) {
-    tipMessage.textContent = "Oops, something went wrong. Try again later.";
-    tipMessage.style.color = "red";
-  }
-});
-
-// Load and display only approved posts
-function renderPosts(posts) {
-  postsContainer.innerHTML = '';
-  posts.forEach(doc => {
-    const data = doc.data();
-    if (!data.approved) return; // show only approved
-
-    const postEl = document.createElement('div');
-    postEl.className = 'post';
-    postEl.textContent = data.text;
-    postsContainer.appendChild(postEl);
+    // Hide confirmation after 3 seconds
+    setTimeout(() => confirmation.classList.add("hidden"), 3000);
   });
 }
 
-const approvedQuery = query(collection(db, 'tips'), where('approved', '==', true));
-onSnapshot(approvedQuery, (snapshot) => {
-  renderPosts(snapshot.docs);
-});
+// === ADMIN.HTML SCRIPT ===
+if (document.getElementById("loginSection")) {
+  const loginSection = document.getElementById("loginSection");
+  const adminPanel = document.getElementById("adminPanel");
+  const loginError = document.getElementById("loginError");
+  const tipList = document.getElementById("tipList");
+  const adminEmailInput = document.getElementById("adminEmail");
+  const adminPasswordInput = document.getElementById("adminPassword");
+
+  window.login = function () {
+    const email = adminEmailInput.value.trim();
+    const password = adminPasswordInput.value.trim();
+
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      loginError.classList.add("hidden");
+      loginSection.classList.add("hidden");
+      adminPanel.classList.remove("hidden");
+      displayTips();
+    } else {
+      loginError.classList.remove("hidden");
+    }
+  };
+
+  function displayTips() {
+    const tips = getTips();
+    if (tips.length === 0) {
+      tipList.innerHTML = "<p>No tips submitted yet.</p>";
+      return;
+    }
+
+    tipList.innerHTML = tips
+      .map(
+        tip =>
+          `<div class="tip">
+            <p>${escapeHtml(tip.text)}</p>
+            <small>${new Date(tip.timestamp).toLocaleString()}</small>
+          </div>`
+      )
+      .join("");
+  }
+
+  // Basic escape for HTML to avoid injection in display
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+}
