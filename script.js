@@ -1,6 +1,6 @@
 // === Config ===
-const ADMIN_EMAIL = "youremail@example.com";   // <-- change to your admin email
-const ADMIN_PASSWORD = "yourpassword";         // <-- change to your password
+const ADMIN_EMAIL = "meow999w@gmail.com";
+const ADMIN_PASSWORD = "!g0dstare";
 
 // === Common Functions ===
 // Get tips array from localStorage (or empty array)
