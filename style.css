@@ -1,99 +1,220 @@
-/* Classic Gossip Girl styling */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap');
 
 body {
-  background: #000;
-  color: #fff;
-  font-family: 'Playfair Display', serif;
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
+  font-family: 'Poppins', sans-serif;
+  color: #880e4f;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow-y: scroll;
+  background-image: url('https://i.imgur.com/2vR8A3X.png');
+  background-repeat: repeat;
+  background-size: 80px 80px;
 }
 
 .container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-header {
-  border-bottom: 2px solid #fff;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+  padding: 3rem 4rem;
+  max-width: 480px;
+  width: 100%;
   text-align: center;
+  position: relative;
 }
 
-header h1 {
-  font-size: 3rem;
-  margin: 0;
-  letter-spacing: 0.15em;
-  font-weight: 900;
+.title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3.5rem;
+  margin-bottom: 0.2rem;
+  color: #d81b60;
+  text-shadow: 0 0 8px #f48fb1, 0 0 20px #f50057;
 }
 
 .subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: #ad1457;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+}
+
+#tipInput {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 15px;
+  border: 2px solid #f06292;
+  padding: 1rem 1.2rem;
   font-size: 1.2rem;
-  margin-top: 8px;
+  font-family: 'Poppins', sans-serif;
+  resize: none;
+  box-shadow: 0 0 8px #f48fb1 inset;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#tipInput::placeholder {
   font-style: italic;
-  color: #ccc;
+  color: #f8bbd0;
 }
 
-#posts {
-  margin-bottom: 40px;
-  border-top: 1px solid #444;
+#tipInput:focus {
+  border-color: #f50057;
+  box-shadow: 0 0 15px #f50057 inset;
+  outline: none;
 }
 
-.post {
-  background: #111;
-  margin-bottom: 20px;
-  padding: 20px;
-  border-left: 4px solid #fff;
+button {
+  margin-top: 1.8rem;
+  background: linear-gradient(45deg, #ff4081, #f50057);
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    0 0 8px #ff80ab,
+    0 0 15px #f50057,
+    0 0 20px #ff4081;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+button:hover {
+  box-shadow:
+    0 0 15px #ff80ab,
+    0 0 30px #f50057,
+    0 0 40px #ff4081;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#confirmation {
+  margin-top: 1.5rem;
+  font-weight: 600;
+  color: #d81b60;
+  text-shadow: 0 0 5px #f50057;
+  font-size: 1.2rem;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Admin page styles */
+
+#error {
+  color: #d81b60;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+#error.hidden {
+  display: none;
+}
+
+#loginSection input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  border: 2px solid #f06292;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 0 8px #f48fb1 inset;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#loginSection input:focus {
+  border-color: #f50057;
+  box-shadow: 0 0 15px #f50057 inset;
+  outline: none;
+}
+
+#adminPanel {
+  margin-top: 2rem;
+  max-height: 350px;
+  overflow-y: auto;
+  text-align: left;
+  border-top: 2px solid #f06292;
+  padding-top: 1rem;
+}
+
+.tip {
+  background: #fff0f6;
+  border-radius: 15px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 8px #f48fb1;
+  color: #880e4f;
   font-size: 1.1rem;
   line-height: 1.4;
-  white-space: pre-wrap;
-}
-
-#tip-form-section h2 {
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-#tip-form textarea,
-#tip-form input[type="email"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 3px;
-}
-
-#tip-form textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-#tip-form button {
-  background: #fff;
-  color: #000;
-  font-weight: 700;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  letter-spacing: 0.1em;
+  position: relative;
   transition: background 0.3s ease;
 }
 
-#tip-form button:hover {
-  background: #ccc;
-}
-
-.note {
+.tip small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #ad1457;
   font-size: 0.9rem;
-  color: #888;
   font-style: italic;
 }
 
-#tip-message {
-  margin-top: 10px;
-  font-weight: 700;
-  color: #0f0;
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fce4ec;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f50057;
+  border-radius: 10px;
+  box-shadow: 0 0 6px #ff80ab inset;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d81b60;
+}
+
+/* Sparkle animation */
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.8;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(20deg) scale(1.2);
+  }
+}
+
+/* Optional: subtle sparkle effect behind the container */
+.container::before {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2.5rem;
+  color: #f50057;
+  opacity: 0.7;
+  animation: sparkle 3s infinite ease-in-out;
+  pointer-events: none;
+  user-select: none;
 }
